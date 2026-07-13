@@ -1,4 +1,4 @@
-# TOCK
+# TOCK - tomato clock 番茄钟
 
 [中文](#中文) | [English](#english)
 
