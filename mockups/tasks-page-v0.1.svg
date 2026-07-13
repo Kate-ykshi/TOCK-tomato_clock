@@ -1,0 +1,108 @@
+<svg width="800" height="700" viewBox="0 0 800 700" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="28" flood-color="#1F2933" flood-opacity="0.12"/>
+    </filter>
+    <filter id="panelShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="16" flood-color="#1F2933" flood-opacity="0.075"/>
+    </filter>
+    <linearGradient id="appBg" x1="70" y1="58" x2="750" y2="640" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F7F8F3"/>
+      <stop offset="0.55" stop-color="#F2F5F0"/>
+      <stop offset="1" stop-color="#EEF3F4"/>
+    </linearGradient>
+    <linearGradient id="panelBg" x1="250" y1="150" x2="720" y2="620" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#F3F6F1"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="700" fill="#E8ECE7"/>
+
+  <g opacity="0.82">
+    <rect x="510" y="18" width="72" height="30" rx="15" fill="#F7F8F3"/>
+    <text x="546" y="38" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="15" font-weight="600" fill="#343A40">24:12</text>
+    <rect x="592" y="18" width="30" height="30" rx="15" fill="#F7F8F3"/>
+    <path d="M607 26C612 26 616 30 616 35C616 40 612 44 607 44C602 44 598 40 598 35C598 30 602 26 607 26Z" fill="#7BAF9E"/>
+  </g>
+
+  <rect x="40" y="58" width="720" height="584" rx="28" fill="url(#appBg)" filter="url(#softShadow)"/>
+
+  <g>
+    <circle cx="74" cy="88" r="6" fill="#EF7B70"/>
+    <circle cx="94" cy="88" r="6" fill="#F0C15D"/>
+    <circle cx="114" cy="88" r="6" fill="#79B57A"/>
+  </g>
+
+  <rect x="40" y="58" width="178" height="584" rx="28" fill="#F7F8F3"/>
+  <path d="M218 86V614" stroke="#DDE4DD" stroke-width="1"/>
+
+  <g>
+    <circle cx="82" cy="142" r="22" fill="#DCEBE2"/>
+    <path d="M75 143C75 137 78 134 82 134C86 134 89 137 89 143C89 149 86 152 82 152C78 152 75 149 75 143Z" fill="#6D9F8E"/>
+    <text x="116" y="138" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="15" font-weight="700" fill="#202328">TOCK</text>
+    <text x="116" y="162" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="12" font-weight="500" fill="#7C8580">今日 2.5 小时</text>
+  </g>
+
+  <g>
+    <rect x="64" y="224" width="130" height="42" rx="12" fill="transparent"/>
+    <rect x="77" y="236" width="18" height="18" rx="5" fill="#D9DED9"/>
+    <text x="110" y="251" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="15" font-weight="600" fill="#777F7A">专注</text>
+
+    <rect x="64" y="282" width="130" height="42" rx="12" fill="transparent"/>
+    <rect x="77" y="294" width="18" height="18" rx="5" fill="#D9DED9"/>
+    <text x="110" y="309" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="15" font-weight="600" fill="#777F7A">统计</text>
+
+    <rect x="64" y="340" width="130" height="42" rx="12" fill="#E7F0EA"/>
+    <rect x="77" y="352" width="18" height="18" rx="5" fill="#7BAF9E"/>
+    <text x="110" y="367" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="15" font-weight="700" fill="#24282D">任务</text>
+  </g>
+
+  <g>
+    <text x="252" y="112" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="20" font-weight="700" fill="#202328">任务</text>
+    <rect x="648" y="96" width="76" height="38" rx="19" fill="#F5F7F3" stroke="#DDE4DD"/>
+    <text x="686" y="120" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="13" font-weight="800" fill="#38413C">编辑</text>
+  </g>
+
+  <g filter="url(#panelShadow)">
+    <rect x="252" y="154" width="472" height="118" rx="22" fill="url(#panelBg)"/>
+  </g>
+  <circle cx="282" cy="188" r="7" fill="#7BAF9E"/>
+  <text x="300" y="193" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="16" font-weight="800" fill="#202328">学习</text>
+  <text x="668" y="193" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="12" font-weight="700" fill="#8C9690">今日 2h05m</text>
+  <path d="M280 212H696" stroke="#E7ECE8" stroke-width="1"/>
+  <circle cx="282" cy="234" r="4.5" fill="#315F55"/>
+  <text x="296" y="239" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="15" font-weight="500" fill="#38413C">英语阅读</text>
+  <text x="696" y="239" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="15" font-weight="500" fill="#202328">1h20m</text>
+  <circle cx="282" cy="258" r="4.5" fill="#7BAF9E"/>
+  <text x="296" y="263" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="15" font-weight="500" fill="#38413C">SwiftUI 学习</text>
+  <text x="696" y="263" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="15" font-weight="500" fill="#202328">45m</text>
+
+  <g filter="url(#panelShadow)">
+    <rect x="252" y="292" width="472" height="118" rx="22" fill="url(#panelBg)"/>
+  </g>
+  <circle cx="282" cy="326" r="7" fill="#E6B45F"/>
+  <text x="300" y="331" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="16" font-weight="800" fill="#202328">写作</text>
+  <text x="668" y="331" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="12" font-weight="700" fill="#8C9690">今日 2h30m</text>
+  <path d="M280 350H696" stroke="#E7ECE8" stroke-width="1"/>
+  <circle cx="282" cy="372" r="4.5" fill="#B98522"/>
+  <text x="296" y="377" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="15" font-weight="500" fill="#38413C">PRD 整理</text>
+  <text x="696" y="377" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="15" font-weight="500" fill="#202328">2h10m</text>
+  <circle cx="282" cy="396" r="4.5" fill="#E6B45F"/>
+  <text x="296" y="401" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="15" font-weight="500" fill="#38413C">日记</text>
+  <text x="696" y="401" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="15" font-weight="500" fill="#202328">20m</text>
+
+  <g filter="url(#panelShadow)">
+    <rect x="252" y="430" width="472" height="118" rx="22" fill="url(#panelBg)"/>
+  </g>
+  <circle cx="282" cy="464" r="7" fill="#D77B72"/>
+  <text x="300" y="469" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="16" font-weight="800" fill="#202328">生活</text>
+  <text x="668" y="469" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="12" font-weight="700" fill="#8C9690">今日 35m</text>
+  <path d="M280 488H696" stroke="#E7ECE8" stroke-width="1"/>
+  <circle cx="282" cy="510" r="4.5" fill="#B84D48"/>
+  <text x="296" y="515" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="15" font-weight="500" fill="#38413C">整理房间</text>
+  <text x="696" y="515" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="15" font-weight="500" fill="#202328">20m</text>
+  <circle cx="282" cy="534" r="4.5" fill="#D77B72"/>
+  <text x="296" y="539" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="15" font-weight="500" fill="#38413C">散步</text>
+  <text x="696" y="539" text-anchor="end" font-family="-apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif" font-size="15" font-weight="500" fill="#202328">15m</text>
+</svg>
