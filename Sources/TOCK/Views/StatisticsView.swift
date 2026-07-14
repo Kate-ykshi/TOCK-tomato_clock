@@ -63,8 +63,8 @@ struct StatisticsView: View {
         .sorted { $0.seconds > $1.seconds }
     }
 
-    private var hourlySeconds: [Int] {
-        var buckets = Array(repeating: 0, count: 24)
+    private var hourlyBuckets: [HourlyBucket] {
+        var buckets = Array(repeating: HourlyBucket.empty, count: 24)
         filteredSessions.forEach { record in
             add(record: record, to: &buckets)
         }
@@ -302,10 +302,10 @@ struct StatisticsView: View {
                 .font(.system(size: 16, weight: .bold))
                 .foregroundStyle(Color.primaryText)
 
-            if hourlySeconds.reduce(0, +) == 0 {
+            if hourlyBuckets.reduce(0, { $0 + $1.seconds }) == 0 {
                 StatisticsEmptyState(text: "今天还没有专注记录。")
             } else {
-                HourlyDistributionChart(secondsByHour: hourlySeconds)
+                HourlyDistributionChart(hourlyBuckets: hourlyBuckets)
             }
         }
         .padding(28)
@@ -397,7 +397,7 @@ struct StatisticsView: View {
         }
     }
 
-    private func add(record: FocusSessionRecord, to buckets: inout [Int]) {
+    private func add(record: FocusSessionRecord, to buckets: inout [HourlyBucket]) {
         let calendar = Calendar.current
         var cursor = record.startedAt
         let end = record.endedAt
@@ -406,7 +406,10 @@ struct StatisticsView: View {
             guard let hourInterval = calendar.dateInterval(of: .hour, for: cursor) else { break }
             let segmentEnd = min(hourInterval.end, end)
             let hour = calendar.component(.hour, from: cursor)
-            buckets[hour] += max(0, Int(segmentEnd.timeIntervalSince(cursor)))
+            buckets[hour].add(
+                seconds: max(0, Int(segmentEnd.timeIntervalSince(cursor))),
+                colorToken: record.categoryColorToken
+            )
 
             guard segmentEnd > cursor else { break }
             cursor = segmentEnd
@@ -463,15 +466,32 @@ private struct DayTotal: Identifiable {
     var id: Date { date }
 }
 
+private struct HourlyBucket {
+    static let empty = HourlyBucket(seconds: 0, categorySeconds: [:])
+
+    private(set) var seconds: Int
+    private var categorySeconds: [TockColorToken: Int]
+
+    mutating func add(seconds addedSeconds: Int, colorToken: TockColorToken) {
+        guard addedSeconds > 0 else { return }
+        seconds += addedSeconds
+        categorySeconds[colorToken, default: 0] += addedSeconds
+    }
+
+    var dominantColor: Color? {
+        categorySeconds.max { $0.value < $1.value }?.key.color
+    }
+}
+
 private struct HourlyDistributionChart: View {
-    let secondsByHour: [Int]
+    let hourlyBuckets: [HourlyBucket]
 
     private let plotHeight: CGFloat = 76
     private let visibleHours = Array(6..<24)
     private let hourLabels = [9, 12, 15, 18, 21]
 
     private var maxSeconds: Int {
-        max(secondsByHour.max() ?? 0, 60 * 60)
+        max(hourlyBuckets.map(\.seconds).max() ?? 0, 60 * 60)
     }
 
     var body: some View {
@@ -511,14 +531,15 @@ private struct HourlyDistributionChart: View {
 
                 HStack(alignment: .bottom, spacing: 0) {
                     ForEach(visibleHours, id: \.self) { hour in
-                        let seconds = secondsByHour.indices.contains(hour) ? secondsByHour[hour] : 0
+                        let bucket = hourlyBuckets.indices.contains(hour) ? hourlyBuckets[hour] : .empty
+                        let seconds = bucket.seconds
                         let height = barHeight(for: seconds, plotHeight: proxy.size.height)
 
                         VStack {
                             Spacer(minLength: 0)
 
                             RoundedRectangle(cornerRadius: seconds == 0 ? 2.5 : 3)
-                                .fill(seconds == 0 ? Color.line : barColor(for: seconds))
+                                .fill(seconds == 0 ? Color.line : barColor(for: bucket))
                                 .frame(width: seconds == 0 ? 5 : 6, height: height)
                                 .help("\(hour):00 \(DurationText.compact(seconds))")
                         }
@@ -563,8 +584,9 @@ private struct HourlyDistributionChart: View {
         return min(max(rawPosition, 11), width - 11)
     }
 
-    private func barColor(for seconds: Int) -> Color {
-        seconds >= 45 * 60 ? Color.deepGreen : Color.tockGreen.opacity(0.75)
+    private func barColor(for bucket: HourlyBucket) -> Color {
+        guard let color = bucket.dominantColor else { return Color.tockGreen.opacity(0.75) }
+        return bucket.seconds >= 45 * 60 ? color : color.opacity(0.75)
     }
 }
 
