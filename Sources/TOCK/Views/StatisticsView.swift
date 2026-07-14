@@ -466,7 +466,7 @@ private struct DayTotal: Identifiable {
 private struct HourlyDistributionChart: View {
     let secondsByHour: [Int]
 
-    private let plotHeight: CGFloat = 82
+    private let plotHeight: CGFloat = 76
     private let visibleHours = Array(6..<24)
     private let hourLabels = [9, 12, 15, 18, 21]
 
@@ -486,15 +486,17 @@ private struct HourlyDistributionChart: View {
                     .frame(height: 12)
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+        .padding(.trailing, 12)
+        .offset(x: -8)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomLeading)
     }
 
     private var yAxisLabels: some View {
         ZStack(alignment: .topTrailing) {
             Text("60")
-                .position(x: 12, y: 4)
+                .position(x: 7, y: 4)
             Text("30")
-                .position(x: 12, y: plotHeight / 2)
+                .position(x: 7, y: plotHeight / 2)
         }
         .font(.system(size: 9, weight: .semibold))
         .foregroundStyle(Color.secondaryText.opacity(0.7))
