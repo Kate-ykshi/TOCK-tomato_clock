@@ -123,6 +123,7 @@ struct StatisticsView: View {
                 taskShareCard
                 detailCard
             }
+            .frame(maxWidth: .infinity)
 
             Spacer()
         }
@@ -265,7 +266,7 @@ struct StatisticsView: View {
             if displayedSeconds == 0 {
                 StatisticsEmptyState(text: "开始一段专注后，这里会出现分类占比。")
             } else {
-                HStack {
+                HStack(spacing: 34) {
                     DonutChart(totals: categoryTotals, totalSeconds: displayedSeconds)
                         .frame(width: 86, height: 86)
 
@@ -274,11 +275,14 @@ struct StatisticsView: View {
                             LegendDot(color: total.color, title: total.name)
                         }
                     }
+
+                    Spacer(minLength: 0)
                 }
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
         }
         .padding(28)
-        .frame(width: 224, height: 150)
+        .frame(maxWidth: .infinity, minHeight: 150)
         .cardStyle()
     }
 
@@ -300,26 +304,11 @@ struct StatisticsView: View {
             if hourlySeconds.reduce(0, +) == 0 {
                 StatisticsEmptyState(text: "今天还没有专注记录。")
             } else {
-                HStack(alignment: .bottom, spacing: 3) {
-                    let maxSeconds = max(hourlySeconds.max() ?? 0, 1)
-
-                    ForEach(hourlySeconds.indices, id: \.self) { hour in
-                        let seconds = hourlySeconds[hour]
-                        let height = seconds == 0
-                            ? CGFloat(5)
-                            : max(CGFloat(8), CGFloat(seconds) / CGFloat(maxSeconds) * 78)
-
-                        RoundedRectangle(cornerRadius: 3)
-                            .fill(seconds == 0 ? Color.line : barColor(for: seconds))
-                            .frame(width: 5, height: height)
-                            .help("\(hour):00 \(DurationText.compact(seconds))")
-                    }
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+                HourlyDistributionChart(secondsByHour: hourlySeconds)
             }
         }
         .padding(28)
-        .frame(width: 224, height: 150)
+        .frame(maxWidth: .infinity, minHeight: 150)
         .cardStyle()
     }
 
@@ -436,9 +425,6 @@ struct StatisticsView: View {
         }
     }
 
-    private func barColor(for seconds: Int) -> Color {
-        seconds >= 45 * 60 ? Color.deepGreen : Color.tockGreen.opacity(0.75)
-    }
 }
 
 private struct StatisticsEmptyState: View {
@@ -472,6 +458,108 @@ private struct DayTotal: Identifiable {
     let seconds: Int
 
     var id: Date { date }
+}
+
+private struct HourlyDistributionChart: View {
+    let secondsByHour: [Int]
+
+    private let plotHeight: CGFloat = 82
+    private let hourLabels = [9, 12, 15, 18, 21, 24]
+
+    private var maxSeconds: Int {
+        max(secondsByHour.max() ?? 0, 60 * 60)
+    }
+
+    var body: some View {
+        HStack(alignment: .top, spacing: 6) {
+            yAxisLabels
+
+            VStack(spacing: 7) {
+                plotArea
+                    .frame(height: plotHeight)
+
+                xAxisLabels
+                    .frame(height: 12)
+            }
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
+    }
+
+    private var yAxisLabels: some View {
+        ZStack(alignment: .topTrailing) {
+            Text("60")
+                .position(x: 12, y: 4)
+            Text("30")
+                .position(x: 12, y: plotHeight / 2)
+        }
+        .font(.system(size: 9, weight: .semibold))
+        .foregroundStyle(Color.secondaryText.opacity(0.7))
+        .frame(width: 24, height: plotHeight)
+    }
+
+    private var plotArea: some View {
+        GeometryReader { proxy in
+            ZStack(alignment: .bottomLeading) {
+                gridLine(atMinutes: 60, in: proxy.size)
+                gridLine(atMinutes: 30, in: proxy.size)
+
+                HStack(alignment: .bottom, spacing: 0) {
+                    ForEach(0..<24, id: \.self) { hour in
+                        let seconds = secondsByHour.indices.contains(hour) ? secondsByHour[hour] : 0
+                        let height = barHeight(for: seconds, plotHeight: proxy.size.height)
+
+                        VStack {
+                            Spacer(minLength: 0)
+
+                            RoundedRectangle(cornerRadius: seconds == 0 ? 2.5 : 3)
+                                .fill(seconds == 0 ? Color.line : barColor(for: seconds))
+                                .frame(width: seconds == 0 ? 5 : 6, height: height)
+                                .help("\(hour):00 \(DurationText.compact(seconds))")
+                        }
+                        .frame(maxWidth: .infinity)
+                    }
+                }
+                .frame(width: proxy.size.width, height: proxy.size.height)
+            }
+        }
+    }
+
+    private var xAxisLabels: some View {
+        GeometryReader { proxy in
+            ZStack(alignment: .topLeading) {
+                ForEach(hourLabels, id: \.self) { hour in
+                    Text("\(hour)")
+                        .font(.system(size: 9, weight: .semibold))
+                        .foregroundStyle(Color.secondaryText.opacity(0.7))
+                        .frame(width: 22)
+                        .position(x: xPosition(for: hour, width: proxy.size.width), y: 6)
+                }
+            }
+        }
+    }
+
+    private func gridLine(atMinutes minutes: Int, in size: CGSize) -> some View {
+        Path { path in
+            let y = size.height - (CGFloat(minutes * 60) / CGFloat(maxSeconds) * size.height)
+            path.move(to: CGPoint(x: 0, y: y))
+            path.addLine(to: CGPoint(x: size.width, y: y))
+        }
+        .stroke(Color.line.opacity(0.55), style: StrokeStyle(lineWidth: 1, dash: [4, 5]))
+    }
+
+    private func barHeight(for seconds: Int, plotHeight: CGFloat) -> CGFloat {
+        guard seconds > 0 else { return 5 }
+        return max(8, CGFloat(seconds) / CGFloat(maxSeconds) * plotHeight)
+    }
+
+    private func xPosition(for hour: Int, width: CGFloat) -> CGFloat {
+        let rawPosition = width * CGFloat(hour) / 24
+        return min(max(rawPosition, 11), width - 11)
+    }
+
+    private func barColor(for seconds: Int) -> Color {
+        seconds >= 45 * 60 ? Color.deepGreen : Color.tockGreen.opacity(0.75)
+    }
 }
 
 private struct DonutChart: View {
