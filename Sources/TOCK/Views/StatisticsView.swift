@@ -282,7 +282,8 @@ struct StatisticsView: View {
             }
         }
         .padding(28)
-        .frame(maxWidth: .infinity, minHeight: 150)
+        .frame(maxWidth: .infinity)
+        .frame(height: 196)
         .cardStyle()
     }
 
@@ -308,7 +309,8 @@ struct StatisticsView: View {
             }
         }
         .padding(28)
-        .frame(maxWidth: .infinity, minHeight: 150)
+        .frame(maxWidth: .infinity)
+        .frame(height: 196)
         .cardStyle()
     }
 
@@ -351,7 +353,8 @@ struct StatisticsView: View {
             Spacer(minLength: 0)
         }
         .padding(28)
-        .frame(width: 224, height: 150)
+        .frame(maxWidth: .infinity)
+        .frame(height: 196)
         .cardStyle()
     }
 
@@ -464,7 +467,8 @@ private struct HourlyDistributionChart: View {
     let secondsByHour: [Int]
 
     private let plotHeight: CGFloat = 82
-    private let hourLabels = [9, 12, 15, 18, 21, 24]
+    private let visibleHours = Array(6..<24)
+    private let hourLabels = [9, 12, 15, 18, 21]
 
     private var maxSeconds: Int {
         max(secondsByHour.max() ?? 0, 60 * 60)
@@ -504,7 +508,7 @@ private struct HourlyDistributionChart: View {
                 gridLine(atMinutes: 30, in: proxy.size)
 
                 HStack(alignment: .bottom, spacing: 0) {
-                    ForEach(0..<24, id: \.self) { hour in
+                    ForEach(visibleHours, id: \.self) { hour in
                         let seconds = secondsByHour.indices.contains(hour) ? secondsByHour[hour] : 0
                         let height = barHeight(for: seconds, plotHeight: proxy.size.height)
 
@@ -553,7 +557,7 @@ private struct HourlyDistributionChart: View {
     }
 
     private func xPosition(for hour: Int, width: CGFloat) -> CGFloat {
-        let rawPosition = width * CGFloat(hour) / 24
+        let rawPosition = width * CGFloat(hour - 6) / 18
         return min(max(rawPosition, 11), width - 11)
     }
 
